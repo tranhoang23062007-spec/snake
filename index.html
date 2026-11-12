@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#030712">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Snake Game">
+    <title>Snake Game</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Canvas vẽ bầu trời & thiên hà động toàn màn hình -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Khung giao diện chính -->
+    <div class="game-container">
+        <header class="game-header">
+            <div class="header-top">
+                <h1>SNAKE GAME</h1>
+                <button id="pause-btn" class="btn-pause" title="Pause Game (Esc)" disabled>⏸ Pause</button>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-box">
+                    <span class="stat-label">CURRENT LENGTH</span>
+                    <span id="snake-length" class="stat-value">3</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">SPEED</span>
+                    <span id="speed-level" class="stat-value">100%</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-wrapper">
+            <canvas id="game-canvas" width="600" height="600"></canvas>
+
+            <!-- Màn hình phủ khi Bắt đầu (Sảnh) hoặc Kết thúc -->
+            <div id="game-overlay" class="overlay">
+                <h2 id="overlay-title">READY?</h2>
+                <p id="overlay-message">Eat red apples to grow, avoid the bomb!</p>
+                <button id="restart-btn" class="btn-primary">Start Game</button>
+                <span class="hint-text">Or press <strong>Space</strong></span>
+            </div>
+
+            <!-- Màn hình Menu Tạm dừng (Pause Menu) -->
+            <div id="pause-overlay" class="overlay hidden">
+                <h2>GAME PAUSED</h2>
+                <p>Select an option below to continue</p>
+                <div class="pause-menu-actions">
+                    <button id="resume-btn" class="btn-primary">Resume</button>
+                    <button id="surrender-btn" class="btn-danger">Surrender (+1 Loss)</button>
+                    <button id="lobby-btn" class="btn-secondary">Exit to Lobby (+1 Loss)</button>
+                </div>
+                <span class="hint-text">Press <strong>Esc</strong> to resume</span>
+            </div>
+        </div>
+
+        <footer class="game-footer">
+            <div class="legend">
+                <span class="legend-item"><i class="dot food-dot"></i> Food (+1 length)</span>
+                <span class="legend-item"><i class="dot bomb-dot"></i> Bomb (-1 length)</span>
+            </div>
+            <p class="controls-hint">Controls: <strong>Arrow Keys / WASD</strong> | Pause: <strong>Esc</strong></p>
+        </footer>
+    </div>
+
+    <!-- Bảng đếm số trận Thắng / Thua ở góc trên bên phải -->
+    <div class="match-hud" aria-label="Match Statistics">
+        <div class="match-box win-box">
+            <span class="match-label">WINS</span>
+            <span id="wins-count" class="match-value">0</span>
+        </div>
+        <div class="match-box loss-box">
+            <span class="match-label">LOSSES</span>
+            <span id="losses-count" class="match-value">0</span>
+        </div>
+    </div>
+
+    <!-- Cụm phím mũi tên ở góc dưới bên phải, tự sáng lên khi rắn đổi hướng -->
+    <div class="dpad-hud" aria-label="Direction Keys">
+        <div class="dpad-row">
+            <div id="key-up" class="arrow-key" title="Up">▲</div>
+        </div>
+        <div class="dpad-row">
+            <div id="key-left" class="arrow-key" title="Left">◄</div>
+            <div id="key-down" class="arrow-key" title="Down">▼</div>
+            <div id="key-right" class="arrow-key" title="Right">►</div>
+        </div>
+    </div>
+
+    <!-- Nhúng các file JS theo thứ tự phụ thuộc -->
+    <script src="config.js"></script>
+    <script src="background.js"></script>
+    <script src="sound.js"></script>
+    <script src="snake.js"></script>
+    <script src="food.js"></script>
+    <script src="ai.js"></script>
+    <script src="renderer.js"></script>
+    <script src="game.js"></script>
+    <script src="input.js"></script>
+
+    <!-- Đăng ký Service Worker khi chạy trên GitHub Pages (http/https) -->
+    <script>
+        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>
